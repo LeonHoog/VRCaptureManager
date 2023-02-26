@@ -1,0 +1,13 @@
+{
+  "source": [
+    "path_to_file"
+  ],
+  "breaking_version" : 0,
+  "auto_convert" : false,
+  "auto_delete" : false,
+  "fun_stats": {
+    "enabled": true,
+    "counter": 15,
+    "data_saved": 469
+  }
+}

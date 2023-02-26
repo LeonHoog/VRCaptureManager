@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:vrc2heif.Model"
+             xmlns:viewmodel="clr-namespace:vrc2heif.ViewModel"
+             x:DataType="viewmodel:ImageViewModel"
+             x:Class="vrc2heif.View.MainPage">
+    <ContentPage.MenuBarItems>
+        <MenuBarItem Text="Preferences">
+            <MenuFlyoutItem Text="General Settings">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#x1f4dd;"/>
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="File Location"
+                        Command="{Binding ActionSheetFileLocationCommand}">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#x1f4c1;"/>
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="Advanced Settings">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#x2699;"/>
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+        </MenuBarItem>
+        <MenuBarItem Text="About"></MenuBarItem>
+    </ContentPage.MenuBarItems>
+
+    <ScrollView BackgroundColor="{DynamicResource Background}">
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="10"
+            VerticalOptions="StartAndExpand">
+
+
+            <ScrollView>
+                <HorizontalStackLayout>
+                    <Button
+                x:Name="StatusMessageButton"
+                Text="{Binding StatusMessage}"
+                SemanticProperties.Hint="Scans for pictures"
+                Command="{Binding ScanForFilesCommand}"
+                HorizontalOptions="Center" />
+
+                    <BoxView WidthRequest="20" Color="Transparent"/>
+
+                    <Button
+                x:Name="quickCnvrt"
+                Text="Quick Convert"
+                SemanticProperties.Hint="Scans for pictures"
+                HorizontalOptions="Center"
+                IsVisible="false" />
+                </HorizontalStackLayout>
+            </ScrollView>
+
+            <Label
+                Text="Found Pictures:"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="32"
+                HorizontalOptions="Center" />
+
+            <CollectionView
+            ItemsSource="{Binding Images}"
+            SelectionMode="None"
+                ItemsLayout="VerticalGrid, 2">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:ImageModel">
+                        <Grid Padding="10">
+                            <Frame HeightRequest="225" WidthRequest="500"
+                               Padding="0">
+                                <!--<Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AmiiboViewModel}}, Path=GoToDetailsCommand}"
+                                                      CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>-->
+                                <Image Source="{Binding PathName}"
+                                   Aspect="AspectFit"
+                                   HeightRequest="225"/>
+                            </Frame>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
