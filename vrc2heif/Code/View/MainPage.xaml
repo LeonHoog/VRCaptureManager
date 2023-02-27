@@ -51,6 +51,7 @@
                 Text="Quick Convert"
                 SemanticProperties.Hint="Scans for pictures"
                 HorizontalOptions="Center"
+                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ImageViewModel}}, Path=QuickConvert}"
                 IsVisible="{Binding ShowQuickConvertButton}" />
                 </HorizontalStackLayout>
             </ScrollView>
@@ -61,24 +62,17 @@
                 FontSize="32"
                 HorizontalOptions="Center" />
 
-            <CollectionView
-            ItemsSource="{Binding Images}"
-            SelectionMode="None"
-                ItemsLayout="VerticalGrid, 2">
-                <CollectionView.ItemTemplate>
+            <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Center" AlignItems="Center" AlignContent="Center" BindableLayout.ItemsSource="{Binding Images}">
+                <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="model:ImageModel">
-                        <Grid Padding="10">
-                            <Frame HeightRequest="225" WidthRequest="500"
-                               Padding="0">
-                                <Image Source="{Binding PathName}"
+                        <Frame HeightRequest="225" WidthRequest="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ImageViewModel}}, Path=ImageWidth}" Padding="0" Margin="10">
+                            <Image Source="{Binding PathName}"
                                    Aspect="AspectFill"
                                    HeightRequest="225"/>
-                            </Frame>
-                        </Grid>
+                        </Frame>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

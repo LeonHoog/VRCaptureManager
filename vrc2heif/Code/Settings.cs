@@ -10,10 +10,7 @@ public class Settings
     public static bool AutoDelete { get; set; }
     public static bool FunStatsEnabled { get; set; }
     public static FunStats FunStats { get; set; }
-
     private static string settingsPath = Path.Combine(FileSystem.Current.AppDataDirectory, "settings.json");
-    private static string sourcePaths;
-    private static object value;
 
     public Settings()
     {
@@ -38,7 +35,7 @@ public class Settings
         File.WriteAllText(settingsPath, settingsJson);
     }
 
-    public void retrieveData()
+    public static void RetrieveData()
     {
         if (File.Exists(settingsPath))
         {

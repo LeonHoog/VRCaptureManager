@@ -67,6 +67,7 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="LibHeifSharp" Version="2.4.0" />
+		<PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.3.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />

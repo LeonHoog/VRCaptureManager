@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ImageMagick;
 using System.Diagnostics;
 using vrc2heif.Model;
 
@@ -11,8 +12,10 @@ public partial class ImageViewModel : ObservableObject
     public ImageViewModel(Settings settings)
     {
         this.settings = settings;
-        this.showQuickConvertButton = false;
-        this.statusMessage = "Search for pictures";
+        showQuickConvertButton = false;
+        statusMessage = "Search for pictures";
+        imageWidth = 400;
+        imagesInRow = (int)(DeviceDisplay.MainDisplayInfo.Width / imageWidth);
     }
 
     [ObservableProperty]
@@ -23,6 +26,23 @@ public partial class ImageViewModel : ObservableObject
 
     [ObservableProperty]
     ImageModel[] images;
+
+    [ObservableProperty]
+    int imageWidth;
+
+    [ObservableProperty]
+    int imagesInRow;
+
+    [RelayCommand]
+    static void QuickConvert(string imagePath)
+    {
+        // Load the PNG image
+        using MagickImage pngImage = new(imagePath);
+        pngImage.Format = MagickFormat.WebP;
+
+        // Save the HEIF image to a file
+        pngImage.Write(imagePath);
+    }
 
     [RelayCommand]
     void ScanForFiles()
@@ -62,10 +82,10 @@ public partial class ImageViewModel : ObservableObject
     }
 
     [RelayCommand]
-    async void OnActionSheetFileLocation()
+    async static void OnActionSheetFileLocation()
     {
-        settings.retrieveData();
-        string result = await Application.Current.MainPage.DisplayPromptAsync("File Location", "VRC Pictures (Documents folder)", initialValue: Settings.SourcePath, keyboard: Keyboard.Text);
+        Settings.RetrieveData();
+        string result = await Application.Current.MainPage.DisplayPromptAsync("File Location", "VRC Pictures (Documents folder)", initialValue: Settings.SourcePath, keyboard: Keyboard.Text).ConfigureAwait(false);
 
         if (result == null)
             Debug.WriteLine("Cancel");
