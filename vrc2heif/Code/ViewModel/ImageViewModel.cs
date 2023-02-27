@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using vrc2heif.Model;
 
@@ -12,11 +11,12 @@ public partial class ImageViewModel : ObservableObject
     public ImageViewModel(Settings settings)
     {
         this.settings = settings;
-        StatusMessage = "Search for pictures";
+        this.showQuickConvertButton = false;
+        this.statusMessage = "Search for pictures";
     }
 
     [ObservableProperty]
-    bool isBusy;
+    bool showQuickConvertButton;
 
     [ObservableProperty]
     string statusMessage;
@@ -27,6 +27,7 @@ public partial class ImageViewModel : ObservableObject
     [RelayCommand]
     void ScanForFiles()
     {
+        ShowQuickConvertButton = false;
         StatusMessage = "Loading...";
 
         int totalFileCount = 0;
@@ -56,8 +57,8 @@ public partial class ImageViewModel : ObservableObject
         Images = files.ToArray();
 
         StatusMessage = $"{totalFileCount} files detected";
-        //quickCnvrt.IsVisible = true;
 
+        ShowQuickConvertButton = true;
     }
 
     [RelayCommand]
