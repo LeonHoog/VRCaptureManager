@@ -8,7 +8,7 @@ namespace vrc2heif.ViewModel;
 
 public partial class ImageViewModel : ObservableObject
 {
-    private Settings settings;
+    private readonly Settings settings;
     public ImageViewModel(Settings settings)
     {
         this.settings = settings;

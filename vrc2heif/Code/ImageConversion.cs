@@ -37,8 +37,8 @@ internal static class ImageConversion
     {
         bool isGrayscale = IsGrayscale(image);
 
-        var colorspace = isGrayscale ? HeifColorspace.Monochrome : HeifColorspace.Rgb;
-        var chroma = colorspace == HeifColorspace.Monochrome ? HeifChroma.Monochrome : HeifChroma.InterleavedRgb24;
+        HeifColorspace colorspace = isGrayscale ? HeifColorspace.Monochrome : HeifColorspace.Rgb;
+        HeifChroma chroma = colorspace == HeifColorspace.Monochrome ? HeifChroma.Monochrome : HeifChroma.InterleavedRgb24;
 
         HeifImage heifImage = null;
         HeifImage temp = null;
@@ -75,7 +75,7 @@ internal static class ImageConversion
     {
         (bool isGrayscale, bool hasTransparency) = AnalyzeImage(image);
 
-        var colorspace = isGrayscale ? HeifColorspace.Monochrome : HeifColorspace.Rgb;
+        HeifColorspace colorspace = isGrayscale ? HeifColorspace.Monochrome : HeifColorspace.Rgb;
         HeifChroma chroma;
 
         if (colorspace == HeifColorspace.Monochrome)
@@ -132,11 +132,11 @@ internal static class ImageConversion
         {
             for (int y = 0; y < accessor.Height; y++)
             {
-                var src = accessor.GetRowSpan(y);
+                Span<Rgba32> src = accessor.GetRowSpan(y);
 
                 for (int x = 0; x < accessor.Width; x++)
                 {
-                    ref var pixel = ref src[x];
+                    ref Rgba32 pixel = ref src[x];
 
                     if (!(pixel.R == pixel.G && pixel.G == pixel.B))
                     {
@@ -159,14 +159,14 @@ internal static class ImageConversion
                                              bool hasTransparency,
                                              bool premultiplyAlpha)
     {
-        var grayPlane = heifImage.GetPlane(HeifChannel.Y);
+        HeifPlaneData grayPlane = heifImage.GetPlane(HeifChannel.Y);
 
         byte* grayPlaneScan0 = (byte*)grayPlane.Scan0;
         int grayPlaneStride = grayPlane.Stride;
 
         if (hasTransparency)
         {
-            var alphaPlane = heifImage.GetPlane(HeifChannel.Alpha);
+            HeifPlaneData alphaPlane = heifImage.GetPlane(HeifChannel.Alpha);
 
             byte* alphaPlaneScan0 = (byte*)alphaPlane.Scan0;
             int alphaPlaneStride = alphaPlane.Stride;
@@ -175,13 +175,13 @@ internal static class ImageConversion
             {
                 for (int y = 0; y < accessor.Height; y++)
                 {
-                    var src = accessor.GetRowSpan(y);
+                    Span<Rgba32> src = accessor.GetRowSpan(y);
                     byte* dst = grayPlaneScan0 + (y * grayPlaneStride);
                     byte* dstAlpha = alphaPlaneScan0 + (y * alphaPlaneStride);
 
                     for (int x = 0; x < accessor.Width; x++)
                     {
-                        ref var pixel = ref src[x];
+                        ref Rgba32 pixel = ref src[x];
 
                         if (premultiplyAlpha)
                         {
@@ -216,12 +216,12 @@ internal static class ImageConversion
             {
                 for (int y = 0; y < accessor.Height; y++)
                 {
-                    var src = accessor.GetRowSpan(y);
+                    Span<Rgba32> src = accessor.GetRowSpan(y);
                     byte* dst = grayPlaneScan0 + (y * grayPlaneStride);
 
                     for (int x = 0; x < accessor.Width; x++)
                     {
-                        ref var pixel = ref src[x];
+                        ref Rgba32 pixel = ref src[x];
 
                         dst[0] = pixel.R;
 
@@ -234,7 +234,7 @@ internal static class ImageConversion
 
     private static unsafe void CopyGrayscale(Image<Rgb24> image, HeifImage heifImage)
     {
-        var grayPlane = heifImage.GetPlane(HeifChannel.Y);
+        HeifPlaneData grayPlane = heifImage.GetPlane(HeifChannel.Y);
 
         byte* grayPlaneScan0 = (byte*)grayPlane.Scan0;
         int grayPlaneStride = grayPlane.Stride;
@@ -243,12 +243,12 @@ internal static class ImageConversion
         {
             for (int y = 0; y < accessor.Height; y++)
             {
-                var src = accessor.GetRowSpan(y);
+                Span<Rgb24> src = accessor.GetRowSpan(y);
                 byte* dst = grayPlaneScan0 + (y * grayPlaneStride);
 
                 for (int x = 0; x < accessor.Width; x++)
                 {
-                    ref var pixel = ref src[x];
+                    ref Rgb24 pixel = ref src[x];
 
                     dst[0] = pixel.R;
 
@@ -263,7 +263,7 @@ internal static class ImageConversion
                                        bool hasTransparency,
                                        bool premultiplyAlpha)
     {
-        var interleavedData = heifImage.GetPlane(HeifChannel.Interleaved);
+        HeifPlaneData interleavedData = heifImage.GetPlane(HeifChannel.Interleaved);
 
         byte* srcScan0 = (byte*)interleavedData.Scan0;
         int srcStride = interleavedData.Stride;
@@ -274,12 +274,12 @@ internal static class ImageConversion
             {
                 for (int y = 0; y < accessor.Height; y++)
                 {
-                    var src = accessor.GetRowSpan(y);
+                    Span<Rgba32> src = accessor.GetRowSpan(y);
                     byte* dst = srcScan0 + (y * srcStride);
 
                     for (int x = 0; x < accessor.Width; x++)
                     {
-                        ref var pixel = ref src[x];
+                        ref Rgba32 pixel = ref src[x];
 
                         if (premultiplyAlpha)
                         {
@@ -321,12 +321,12 @@ internal static class ImageConversion
             {
                 for (int y = 0; y < accessor.Height; y++)
                 {
-                    var src = accessor.GetRowSpan(y);
+                    Span<Rgba32> src = accessor.GetRowSpan(y);
                     byte* dst = srcScan0 + (y * srcStride);
 
                     for (int x = 0; x < accessor.Width; x++)
                     {
-                        ref var pixel = ref src[x];
+                        ref Rgba32 pixel = ref src[x];
 
                         dst[0] = pixel.R;
                         dst[1] = pixel.G;
@@ -341,7 +341,7 @@ internal static class ImageConversion
 
     private static unsafe void CopyRgb(Image<Rgb24> image, HeifImage heifImage)
     {
-        var interleavedData = heifImage.GetPlane(HeifChannel.Interleaved);
+        HeifPlaneData interleavedData = heifImage.GetPlane(HeifChannel.Interleaved);
 
         byte* srcScan0 = (byte*)interleavedData.Scan0;
         int srcStride = interleavedData.Stride;
@@ -350,12 +350,12 @@ internal static class ImageConversion
         {
             for (int y = 0; y < accessor.Height; y++)
             {
-                var src = accessor.GetRowSpan(y);
+                Span<Rgb24> src = accessor.GetRowSpan(y);
                 byte* dst = srcScan0 + (y * srcStride);
 
                 for (int x = 0; x < accessor.Width; x++)
                 {
-                    ref var pixel = ref src[x];
+                    ref Rgb24 pixel = ref src[x];
 
                     dst[0] = pixel.R;
                     dst[1] = pixel.G;
@@ -375,11 +375,11 @@ internal static class ImageConversion
         {
             for (int y = 0; y < accessor.Height; y++)
             {
-                var src = accessor.GetRowSpan(y);
+                Span<Rgb24> src = accessor.GetRowSpan(y);
 
                 for (int x = 0; x < accessor.Width; x++)
                 {
-                    ref var pixel = ref src[x];
+                    ref Rgb24 pixel = ref src[x];
 
                     if (!(pixel.R == pixel.G && pixel.G == pixel.B))
                     {

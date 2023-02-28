@@ -10,7 +10,7 @@ public class Settings
     public static bool AutoDelete { get; set; }
     public static bool FunStatsEnabled { get; set; }
     public static FunStats FunStats { get; set; }
-    private static string settingsPath = Path.Combine(FileSystem.Current.AppDataDirectory, "settings.json");
+    private readonly static string settingsPath = Path.Combine(FileSystem.Current.AppDataDirectory, "settings.json");
 
     public Settings()
     {
