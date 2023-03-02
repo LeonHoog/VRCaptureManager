@@ -34,27 +34,30 @@
             Padding="10"
             VerticalOptions="StartAndExpand">
 
-
-            <ScrollView>
-                <HorizontalStackLayout>
-                    <Button
-                x:Name="StatusMessageButton"
-                Text="{Binding StatusMessage}"
-                SemanticProperties.Hint="Scans for pictures"
-                Command="{Binding ScanForFilesCommand}"
-                HorizontalOptions="Center" />
-
-                    <BoxView WidthRequest="20" Color="Transparent"/>
-
-                    <Button
-                x:Name="quickCnvrt"
-                Text="Quick Convert"
-                SemanticProperties.Hint="Scans for pictures"
-                HorizontalOptions="Center"
-                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ImageViewModel}}, Path=QuickConvert}"
-                IsVisible="{Binding ShowQuickConvertButton}" />
-                </HorizontalStackLayout>
-            </ScrollView>
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Column="0"
+                    x:Name="StatusMessageButton"
+                    Text="{Binding StatusMessage}"
+                    SemanticProperties.Hint="Scans for pictures"
+                    Command="{Binding ScanForFilesCommand}"
+                    HorizontalOptions="Center"/>
+                <Button
+                    Grid.Column="1"
+                        x:Name="quickCnvrt"
+                        Text="Quick Convert"
+                        SemanticProperties.Hint="Scans for pictures"
+                        HorizontalOptions="Center"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ImageViewModel}}, Path=QuickConvertCommand}"
+                        CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ImageViewModel}}, Path=Images}"
+                        IsEnabled="{Binding ShowQuickConvertButton}"/>
+                <ProgressBar Grid.Column="2" Progress="{Binding ConversionProgress}" Margin="0" HorizontalOptions="FillAndExpand"/>
+            </Grid>
 
             <Label
                 Text="Found Pictures:"

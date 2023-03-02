@@ -15,7 +15,7 @@ public partial class ImageViewModel : ObservableObject
         showQuickConvertButton = false;
         statusMessage = "Search for pictures";
         imageWidth = 400;
-        imagesInRow = (int)(DeviceDisplay.MainDisplayInfo.Width / imageWidth);
+        conversionProgress = 0;
     }
 
     [ObservableProperty]
@@ -31,36 +31,50 @@ public partial class ImageViewModel : ObservableObject
     int imageWidth;
 
     [ObservableProperty]
-    int imagesInRow;
+    double conversionProgress;
+
+    [ObservableProperty]
+    static List<ImageModel> filesList;
 
     [RelayCommand]
-    static void QuickConvert(string imagePath)
+    void QuickConvert(ImageModel[] images)
     {
-        // Load the PNG image
-        using MagickImage pngImage = new(imagePath);
-        pngImage.Format = MagickFormat.WebP;
+        string[] imagePaths = new string[images.Length];
+        for (int i = 0; i < images.Length; i++) { imagePaths[i] = images[i].PathName; }
+        imageConversion(imagePaths);
+    }
 
-        // Save the HEIF image to a file
-        pngImage.Write(imagePath);
+    private void imageConversion(string[] imagePaths)
+    {
+        for (int _i = 0; _i < imagePaths.Length; _i++)
+        {
+            string outputDirectory = Path.GetDirectoryName(imagePaths[_i]);
+            string outputFileName = Path.GetFileNameWithoutExtension(imagePaths[_i]) + ".webp";
+            string outputImagePath = Path.Combine(outputDirectory, outputFileName);
+
+            using (MagickImage image = new MagickImage(imagePaths[_i]))
+            {
+                image.Format = MagickFormat.WebP;
+                image.Quality = 100;
+                image.Write(outputImagePath);
+            }
+            ConversionProgress = ((double)_i / imagePaths.Length);
+        }
     }
 
     [RelayCommand]
     void ScanForFiles()
     {
-        ShowQuickConvertButton = false;
-        StatusMessage = "Loading...";
-
+        // reset values
         int totalFileCount = 0;
+        showQuickConvertButton = false;
+        List<ImageModel> files = new();
+        StatusMessage = "Loading...";
 
         int fileCount = Directory.GetFiles(Settings.SourcePath).Length;
         int folderCount = Directory.GetDirectories(Settings.SourcePath).Length;
 
-        //flexLayout.Children.Clear();
-
-        Debug.WriteLine($"Number of files: {fileCount}");
-        Debug.WriteLine($"Number of folders: {folderCount}");
-
-        List<ImageModel> files = new();
+        Debug.WriteLine($"Number of files: {fileCount}\nNumber of folders: {folderCount}");
 
         // TODO cache values
         for (int i = 0; i < Directory.GetDirectories(Settings.SourcePath).Length; i++)
@@ -70,8 +84,8 @@ public partial class ImageViewModel : ObservableObject
             for (int j = 0; j < Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i])).Length; j++)
             {
                 files.Add(new ImageModel() { PathName = Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i]))[j] });
+                Debug.WriteLine(Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i]))[j]);
             }
-
         }
 
         Images = files.ToArray();
