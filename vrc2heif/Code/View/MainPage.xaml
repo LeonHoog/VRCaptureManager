@@ -36,26 +36,28 @@
 
             <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="160"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button
                     Grid.Column="0"
                     x:Name="StatusMessageButton"
-                    Text="{Binding StatusMessage}"
+                    Text="{Binding StatusMessageScan}"
                     SemanticProperties.Hint="Scans for pictures"
                     Command="{Binding ScanForFilesCommand}"
-                    HorizontalOptions="Center"/>
+                    HorizontalOptions="Center"
+                    WidthRequest="160"
+                    IsEnabled="{Binding EnableFilesScanButton}"/>
                 <Button
                     Grid.Column="1"
                         x:Name="quickCnvrt"
-                        Text="Quick Convert"
-                        SemanticProperties.Hint="Scans for pictures"
+                        Text="{Binding StatusMessageConvert}"
+                        SemanticProperties.Hint="Converts pictures"
                         HorizontalOptions="Center"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ImageViewModel}}, Path=QuickConvertCommand}"
                         CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ImageViewModel}}, Path=Images}"
-                        IsEnabled="{Binding ShowQuickConvertButton}"/>
+                        IsEnabled="{Binding EnableQuickConvertButton}"/>
                 <ProgressBar Grid.Column="2" Progress="{Binding ConversionProgress}" Margin="0" HorizontalOptions="FillAndExpand"/>
             </Grid>
 

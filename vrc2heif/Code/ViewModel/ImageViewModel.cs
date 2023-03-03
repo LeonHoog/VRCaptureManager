@@ -12,17 +12,25 @@ public partial class ImageViewModel : ObservableObject
     public ImageViewModel(Settings settings)
     {
         this.settings = settings;
-        showQuickConvertButton = false;
-        statusMessage = "Search for pictures";
+        enableFilesScanButton = true;
+        enableQuickConvertButton = false;
+        statusMessageScan = "Search for pictures";
+        statusMessageConvert = "Quick Convert";
         imageWidth = 400;
         conversionProgress = 0;
     }
 
     [ObservableProperty]
-    bool showQuickConvertButton;
+    bool enableFilesScanButton;
 
     [ObservableProperty]
-    string statusMessage;
+    bool enableQuickConvertButton;
+
+    [ObservableProperty]
+    string statusMessageScan;
+
+    [ObservableProperty]
+    string statusMessageConvert;
 
     [ObservableProperty]
     ImageModel[] images;
@@ -44,55 +52,80 @@ public partial class ImageViewModel : ObservableObject
         imageConversion(imagePaths);
     }
 
-    private void imageConversion(string[] imagePaths)
+    private async void imageConversion(string[] imagePaths)
     {
-        for (int _i = 0; _i < imagePaths.Length; _i++)
+        await Task.Run(() =>
         {
-            string outputDirectory = Path.GetDirectoryName(imagePaths[_i]);
-            string outputFileName = Path.GetFileNameWithoutExtension(imagePaths[_i]) + ".webp";
-            string outputImagePath = Path.Combine(outputDirectory, outputFileName);
-
-            using (MagickImage image = new MagickImage(imagePaths[_i]))
+            EnableQuickConvertButton = false;
+            EnableFilesScanButton = false;
+            ConversionProgress = 0;
+            for (int _i = 0; _i < imagePaths.Length; _i++)
             {
-                image.Format = MagickFormat.WebP;
-                image.Quality = 100;
-                image.Write(outputImagePath);
+                string outputDirectory = Path.GetDirectoryName(imagePaths[_i]);
+                string outputFileName = Path.GetFileNameWithoutExtension(imagePaths[_i]) + ".webp";
+                string outputImagePath = Path.Combine(outputDirectory, outputFileName);
+
+                using (MagickImage image = new MagickImage(imagePaths[_i]))
+                {
+                    image.Format = MagickFormat.WebP;
+                    image.Quality = 100;
+                    image.Write(outputImagePath);
+                }
+                ConversionProgress = ((double)(_i+1) / imagePaths.Length);
             }
-            ConversionProgress = ((double)_i / imagePaths.Length);
-        }
+        });
+
+        // Update the UI on the main (UI) thread
+        await Device.InvokeOnMainThreadAsync(() =>
+        {
+            StatusMessageConvert = "Done!";
+            EnableFilesScanButton = true;
+        });
     }
 
     [RelayCommand]
-    void ScanForFiles()
+    async void ScanForFiles()
     {
         // reset values
         int totalFileCount = 0;
-        showQuickConvertButton = false;
+        enableQuickConvertButton = false;
         List<ImageModel> files = new();
-        StatusMessage = "Loading...";
+        StatusMessageScan = "Loading...";
 
-        int fileCount = Directory.GetFiles(Settings.SourcePath).Length;
-        int folderCount = Directory.GetDirectories(Settings.SourcePath).Length;
-
-        Debug.WriteLine($"Number of files: {fileCount}\nNumber of folders: {folderCount}");
-
-        // TODO cache values
-        for (int i = 0; i < Directory.GetDirectories(Settings.SourcePath).Length; i++)
+        await Task.Run(() =>
         {
-            totalFileCount += Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i])).Length;
+            int fileCount = Directory.GetFiles(Settings.SourcePath).Length;
+            int folderCount = Directory.GetDirectories(Settings.SourcePath).Length;
 
-            for (int j = 0; j < Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i])).Length; j++)
+            Debug.WriteLine($"Number of files: {fileCount}\nNumber of folders: {folderCount}");
+
+            // TODO cache values
+            for (int i = 0; i < Directory.GetDirectories(Settings.SourcePath).Length; i++)
             {
-                files.Add(new ImageModel() { PathName = Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i]))[j] });
-                Debug.WriteLine(Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i]))[j]);
+                for (int j = 0; j < Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i])).Length; j++)
+                {
+                    bool isMatch = false;
+
+                    switch (Path.GetExtension(Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i]))[j])) {
+                        case ".png":
+                            isMatch = true;
+                            break;
+                    }
+                    if (isMatch) {
+                        files.Add(new ImageModel() { PathName = Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i]))[j] });
+                        totalFileCount++;
+                    }
+                }
             }
-        }
+        });
 
-        Images = files.ToArray();
-
-        StatusMessage = $"{totalFileCount} files detected";
-
-        ShowQuickConvertButton = true;
+        // Update the UI on the main (UI) thread
+        await Device.InvokeOnMainThreadAsync(() =>
+        {
+            Images = files.ToArray();
+            StatusMessageScan = $"{totalFileCount} files detected";
+            enableQuickConvertButton = true;
+        });
     }
 
     [RelayCommand]
