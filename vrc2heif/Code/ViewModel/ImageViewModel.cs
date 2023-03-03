@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ImageMagick;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Webp;
 using System.Diagnostics;
 using vrc2heif.Model;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace vrc2heif.ViewModel;
 
@@ -54,85 +56,63 @@ public partial class ImageViewModel : ObservableObject
 
     private async void imageConversion(string[] imagePaths)
     {
+        EnableQuickConvertButton = false;
+        EnableFilesScanButton = false;
+        ConversionProgress = 0;
+        StatusMessageConvert = "Converting...";
+        int count = 0;
+
         await Task.Run(() =>
         {
-            EnableQuickConvertButton = false;
-            EnableFilesScanButton = false;
-            ConversionProgress = 0;
-            for (int _i = 0; _i < imagePaths.Length; _i++)
+            Parallel.ForEach(imagePaths, (imagePath) =>
             {
-                string outputDirectory = Path.GetDirectoryName(imagePaths[_i]);
-                string outputFileName = Path.GetFileNameWithoutExtension(imagePaths[_i]) + ".webp";
-                string outputImagePath = Path.Combine(outputDirectory, outputFileName);
+                string outputImagePath = Path.ChangeExtension(imagePath, "webp");
 
-                using (MagickImage image = new MagickImage(imagePaths[_i]))
-                {
-                    image.Format = MagickFormat.WebP;
-                    image.Quality = 100;
-                    image.Write(outputImagePath);
-                }
-                ConversionProgress = ((double)(_i+1) / imagePaths.Length);
-            }
-        });
+                using Image image = Image.Load(imagePath);
+                
+                image.Save(outputImagePath, new WebpEncoder() { Quality = 100});
+                ConversionProgress = (double)count++ / imagePaths.Length;
+            });
+        }).ConfigureAwait(false);
 
-        // Update the UI on the main (UI) thread
-        await Device.InvokeOnMainThreadAsync(() =>
-        {
-            StatusMessageConvert = "Done!";
-            EnableFilesScanButton = true;
-        });
+        ConversionProgress = 100;
+
+        StatusMessageConvert = "Done!";
+        EnableFilesScanButton = true;
     }
 
     [RelayCommand]
-    async void ScanForFiles()
+    void ScanForFiles()
     {
         // reset values
-        int totalFileCount = 0;
-        enableQuickConvertButton = false;
+        EnableQuickConvertButton = false;
         List<ImageModel> files = new();
         StatusMessageScan = "Loading...";
 
-        await Task.Run(() =>
+        string[] filePaths = Directory.GetFiles(settings.SourcePath, "*.*", SearchOption.AllDirectories);
+
+        foreach (string file in filePaths)
         {
-            int fileCount = Directory.GetFiles(Settings.SourcePath).Length;
-            int folderCount = Directory.GetDirectories(Settings.SourcePath).Length;
-
-            Debug.WriteLine($"Number of files: {fileCount}\nNumber of folders: {folderCount}");
-
-            // TODO cache values
-            for (int i = 0; i < Directory.GetDirectories(Settings.SourcePath).Length; i++)
+            switch (Path.GetExtension(file))
             {
-                for (int j = 0; j < Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i])).Length; j++)
-                {
-                    bool isMatch = false;
-
-                    switch (Path.GetExtension(Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i]))[j])) {
-                        case ".png":
-                            isMatch = true;
-                            break;
-                    }
-                    if (isMatch) {
-                        files.Add(new ImageModel() { PathName = Directory.GetFiles(Path.Combine(Settings.SourcePath, Directory.GetDirectories(Settings.SourcePath)[i]))[j] });
-                        totalFileCount++;
-                    }
-                }
+                case ".png":
+                    files.Add(new ImageModel() { PathName = file });
+                    break;
             }
-        });
+        }
 
         // Update the UI on the main (UI) thread
-        await Device.InvokeOnMainThreadAsync(() =>
-        {
-            Images = files.ToArray();
-            StatusMessageScan = $"{totalFileCount} files detected";
-            enableQuickConvertButton = true;
-        });
+        Debug.WriteLine($"Files counted: {files.Count}, path count: {filePaths.Length}");
+        Images = files.ToArray();
+        StatusMessageScan = $"{files.Count} files detected";
+        EnableQuickConvertButton = true;
     }
 
     [RelayCommand]
-    async static void OnActionSheetFileLocation()
+    async void OnActionSheetFileLocation()
     {
-        Settings.RetrieveData();
-        string result = await Application.Current.MainPage.DisplayPromptAsync("File Location", "VRC Pictures (Documents folder)", initialValue: Settings.SourcePath, keyboard: Keyboard.Text).ConfigureAwait(false);
+        settings.RetrieveData();
+        string result = await Application.Current.MainPage.DisplayPromptAsync("File Location", "VRC Pictures (Documents folder)", initialValue: settings.SourcePath, keyboard: Keyboard.Text);
 
         if (result == null)
             Debug.WriteLine("Cancel");
@@ -140,8 +120,8 @@ public partial class ImageViewModel : ObservableObject
             Debug.WriteLine("OK, without input");
         else
         {
-            Settings.SourcePath = result;
-            Settings.SaveData();
+            settings.SourcePath = result;
+            settings.SaveData();
         }
     }
 }

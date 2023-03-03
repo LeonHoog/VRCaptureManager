@@ -4,13 +4,13 @@ namespace vrc2heif;
 
 public class Settings
 {
-    public static string SourcePath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "VRChat");
-    public static int BreakingVersion { get; set; }
-    public static bool AutoConvert { get; set; }
-    public static bool AutoDelete { get; set; }
-    public static bool FunStatsEnabled { get; set; }
-    public static FunStats FunStats { get; set; }
-    private readonly static string settingsPath = Path.Combine(FileSystem.Current.AppDataDirectory, "settings.json");
+    public string SourcePath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "VRChat");
+    public int BreakingVersion { get; set; }
+    public bool AutoConvert { get; set; }
+    public bool AutoDelete { get; set; }
+    public bool FunStatsEnabled { get; set; }
+    public FunStats FunStats { get; set; }
+    private readonly string settingsPath = Path.Combine(FileSystem.Current.AppDataDirectory, "settings.json");
 
     public Settings()
     {
@@ -29,13 +29,13 @@ public class Settings
             SaveData();
     }
 
-    public static void SaveData()
+    public void SaveData()
     {
-        string settingsJson = JsonConvert.SerializeObject(new Settings(), Formatting.Indented);
+        string settingsJson = JsonConvert.SerializeObject(this, Formatting.Indented);
         File.WriteAllText(settingsPath, settingsJson);
     }
 
-    public static void RetrieveData()
+    public void RetrieveData()
     {
         if (File.Exists(settingsPath))
         {
