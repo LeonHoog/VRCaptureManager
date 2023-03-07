@@ -5,7 +5,8 @@
              xmlns:viewmodel="clr-namespace:vrc2heif.ViewModel"
              xmlns:local="clr-namespace:vrc2heif"
              x:DataType="viewmodel:ImageViewModel"
-             x:Class="vrc2heif.View.MainPage">
+             x:Class="vrc2heif.View.MainPage"
+             BackgroundColor="#07242B">
     <ContentPage.MenuBarItems>
         <MenuBarItem Text="Preferences">
             <MenuFlyoutItem Text="General Settings">
@@ -37,7 +38,7 @@
             <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="160"/>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="125"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button
@@ -71,10 +72,10 @@
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="model:ImageModel">
                         <Frame HeightRequest="225" WidthRequest="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ImageViewModel}}, Path=ImageWidth}" Padding="0" Margin="10">
-                            <Image Source="{Binding PathName}"
+                                    <Image Source="{Binding PathName}"
                                    Aspect="AspectFill"
                                    HeightRequest="225"/>
-                        </Frame>
+                                </Frame>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>

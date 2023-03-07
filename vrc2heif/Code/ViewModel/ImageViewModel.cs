@@ -68,9 +68,15 @@ public partial class ImageViewModel : ObservableObject
             {
                 string outputImagePath = Path.ChangeExtension(imagePath, "webp");
 
-                using Image image = Image.Load(imagePath);
-                
-                image.Save(outputImagePath, new WebpEncoder() { Quality = 100});
+                using Image image = Image.Load(imagePath)
+
+                image.Save(outputImagePath, new WebpEncoder() { Quality = 100, NearLossless = true});
+
+                DateTime lastWriteTime = File.GetCreationTime(Path.ChangeExtension(imagePath, "png"));
+
+                File.SetLastWriteTime(outputImagePath, lastWriteTime);
+                File.SetCreationTime(outputImagePath, lastWriteTime);
+
                 ConversionProgress = (double)count++ / imagePaths.Length;
             });
         }).ConfigureAwait(false);
@@ -105,6 +111,7 @@ public partial class ImageViewModel : ObservableObject
         Debug.WriteLine($"Files counted: {files.Count}, path count: {filePaths.Length}");
         Images = files.ToArray();
         StatusMessageScan = $"{files.Count} files detected";
+        StatusMessageConvert = "Quick Convert";
         EnableQuickConvertButton = true;
     }
 
