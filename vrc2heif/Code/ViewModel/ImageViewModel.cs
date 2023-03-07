@@ -68,7 +68,7 @@ public partial class ImageViewModel : ObservableObject
             {
                 string outputImagePath = Path.ChangeExtension(imagePath, "webp");
 
-                using Image image = Image.Load(imagePath)
+                using Image image = Image.Load(imagePath);
 
                 image.Save(outputImagePath, new WebpEncoder() { Quality = 100, NearLossless = true});
 
