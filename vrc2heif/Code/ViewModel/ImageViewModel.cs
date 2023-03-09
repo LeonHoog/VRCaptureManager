@@ -13,7 +13,7 @@ public partial class ImageViewModel : ObservableObject
     private readonly Settings settings;
     public ImageViewModel(Settings settings)
     {
-        this.settings = settings;
+        this.settings = settings.RetrieveData();
         enableFilesScanButton = true;
         enableQuickConvertButton = false;
         statusMessageScan = "Search for pictures";
@@ -71,11 +71,10 @@ public partial class ImageViewModel : ObservableObject
                 using Image image = Image.Load(imagePath);
 
                 image.Save(outputImagePath, new WebpEncoder() { Quality = 100, NearLossless = true});
-
-                DateTime lastWriteTime = File.GetCreationTime(Path.ChangeExtension(imagePath, "png"));
-
-                File.SetLastWriteTime(outputImagePath, lastWriteTime);
-                File.SetCreationTime(outputImagePath, lastWriteTime);
+                
+                File.SetLastWriteTime(outputImagePath, File.GetLastWriteTime(imagePath));
+                File.SetCreationTime(outputImagePath, File.GetCreationTime(imagePath));
+                File.SetLastAccessTime(outputImagePath, File.GetLastAccessTime(imagePath));
 
                 ConversionProgress = (double)count++ / imagePaths.Length;
             });
@@ -118,7 +117,6 @@ public partial class ImageViewModel : ObservableObject
     [RelayCommand]
     async void OnActionSheetFileLocation()
     {
-        settings.RetrieveData();
         string result = await Application.Current.MainPage.DisplayPromptAsync("File Location", "VRC Pictures (Documents folder)", initialValue: settings.SourcePath, keyboard: Keyboard.Text);
 
         if (result == null)

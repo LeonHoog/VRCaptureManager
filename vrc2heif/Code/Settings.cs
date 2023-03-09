@@ -35,13 +35,15 @@ public class Settings
         File.WriteAllText(settingsPath, settingsJson);
     }
 
-    public void RetrieveData()
+    public Settings RetrieveData()
     {
         if (File.Exists(settingsPath))
         {
             string settingsJson = File.ReadAllText(settingsPath);
             Settings settings = JsonConvert.DeserializeObject<Settings>(settingsJson);
+            return settings;
         }
+        return null;
     }
 }
 
