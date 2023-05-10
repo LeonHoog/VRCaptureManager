@@ -70,12 +70,49 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Include="Resources\ConvertTo-Heic\ConvertTo-Heic.ps1">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Cake.Powershell" Version="2.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="LibHeifSharp" Version="3.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.0.0" />
 		<PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Resources\Localizations\LocalizationResource.nl.Designer.cs">
+	    <DependentUpon>LocalizationResource.nl.resx</DependentUpon>
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	  </Compile>
+	  <Compile Update="Resources\Localizations\LocalizationResource.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>LocalizationResource.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Localizations\LocalizationResource.nl.resx">
+	    <LastGenOutput>LocalizationResource.nl.Designer.cs</LastGenOutput>
+	    <Generator>ResXFileCodeGenerator</Generator>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Localizations\LocalizationResource.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>LocalizationResource.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Code\View\MainPage.xaml">
+	    <Generator></Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

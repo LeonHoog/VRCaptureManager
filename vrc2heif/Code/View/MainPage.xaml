@@ -4,29 +4,31 @@
              xmlns:model="clr-namespace:vrc2heif.Model"
              xmlns:viewmodel="clr-namespace:vrc2heif.ViewModel"
              xmlns:local="clr-namespace:vrc2heif"
+             xmlns:lang="clr-namespace:vrc2heif.Resources.Localizations"
              x:DataType="viewmodel:ImageViewModel"
              x:Class="vrc2heif.View.MainPage"
              BackgroundColor="#07242B">
     <ContentPage.MenuBarItems>
-        <MenuBarItem Text="Preferences">
-            <MenuFlyoutItem Text="General Settings">
+        <MenuBarItem Text="{x:Static lang:LocalizationResource.preferences}">
+            <MenuFlyoutSubItem Text="{x:Static lang:LocalizationResource.general_settings}">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#x1f4dd;"/>
                 </MenuFlyoutItem.IconImageSource>
-            </MenuFlyoutItem>
-            <MenuFlyoutItem Text="File Location"
-                        Command="{Binding ActionSheetFileLocationCommand}">
+                <MenuFlyoutItem Text="{x:Static lang:LocalizationResource.output_type}"
+                                Command="{Binding ChangeOutputTypeCommand}">
+                    <MenuFlyoutItem.IconImageSource>
+                        <FontImageSource Glyph="&#x267b;"/>
+                    </MenuFlyoutItem.IconImageSource>
+                </MenuFlyoutItem>
+            </MenuFlyoutSubItem>
+            <MenuFlyoutItem Text="{x:Static lang:LocalizationResource.file_location}"
+                        Command="{Binding GetFileLocationCommand}">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#x1f4c1;"/>
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Text="Advanced Settings">
-                <MenuFlyoutItem.IconImageSource>
-                    <FontImageSource Glyph="&#x2699;"/>
-                </MenuFlyoutItem.IconImageSource>
-            </MenuFlyoutItem>
         </MenuBarItem>
-        <MenuBarItem Text="About"></MenuBarItem>
+        <!--<MenuBarItem Text="About"></MenuBarItem>-->
     </ContentPage.MenuBarItems>
 
     <ScrollView BackgroundColor="{DynamicResource Background}">
@@ -63,7 +65,7 @@
             </Grid>
 
             <Label
-                Text="Found Pictures:"
+                Text="{x:Static lang:LocalizationResource.found_items}"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
                 HorizontalOptions="Center" />
@@ -72,10 +74,10 @@
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="model:ImageModel">
                         <Frame HeightRequest="225" WidthRequest="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ImageViewModel}}, Path=ImageWidth}" Padding="0" Margin="10">
-                                    <Image Source="{Binding PathName}"
+                            <Image Source="{Binding PathName}"
                                    Aspect="AspectFill"
                                    HeightRequest="225"/>
-                                </Frame>
+                        </Frame>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>

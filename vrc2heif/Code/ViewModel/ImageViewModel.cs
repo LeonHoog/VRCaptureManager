@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using System.Diagnostics;
 using vrc2heif.Model;
+using vrc2heif.Resources.Localizations; 
 using Image = SixLabors.ImageSharp.Image;
 
 namespace vrc2heif.ViewModel;
@@ -16,8 +16,8 @@ public partial class ImageViewModel : ObservableObject
         this.settings = settings.RetrieveData();
         enableFilesScanButton = true;
         enableQuickConvertButton = false;
-        statusMessageScan = "Search for pictures";
-        statusMessageConvert = "Quick Convert";
+        statusMessageScan = LocalizationResource.search_items;
+        statusMessageConvert = LocalizationResource.quick_convert;
         imageWidth = 400;
         conversionProgress = 0;
     }
@@ -50,16 +50,30 @@ public partial class ImageViewModel : ObservableObject
     void QuickConvert(ImageModel[] images)
     {
         string[] imagePaths = new string[images.Length];
-        for (int i = 0; i < images.Length; i++) { imagePaths[i] = images[i].PathName; }
-        imageConversion(imagePaths);
+        for (int i = 0; i < images.Length; i++)
+            { imagePaths[i] = images[i].PathName; }
+
+        switch (settings.OutputType)
+        {
+            case OutputTypes.webp:
+                {
+                    imageConversionWebp(imagePaths);
+                    break;
+                }
+            case OutputTypes.heif:
+                {
+                    imageConversionHeif(imagePaths);
+                    break;
+                }
+        }
     }
 
-    private async void imageConversion(string[] imagePaths)
+    private async void imageConversionWebp(string[] imagePaths)
     {
         EnableQuickConvertButton = false;
         EnableFilesScanButton = false;
         ConversionProgress = 0;
-        StatusMessageConvert = "Converting...";
+        StatusMessageConvert = "Converting..."; //TODO
         int count = 0;
 
         await Task.Run(() =>
@@ -82,7 +96,36 @@ public partial class ImageViewModel : ObservableObject
 
         ConversionProgress = 100;
 
-        StatusMessageConvert = "Done!";
+        StatusMessageConvert = LocalizationResource.done; //TODO
+        EnableFilesScanButton = true;
+    }
+
+    private async void imageConversionHeif(string[] imagePaths)
+    {
+        return; // DEZE FUNCTIE IS NOG NIET GESCHREVEN!
+        EnableQuickConvertButton = false;
+        EnableFilesScanButton = false;
+        ConversionProgress = 0;
+        StatusMessageConvert = "Converting..."; //TODO
+        int count = 0;
+
+        await Task.Run(() =>
+        {
+            Parallel.ForEach(imagePaths, async (imagePath) =>
+            {
+                string outputImagePath = Path.ChangeExtension(imagePath, "webp"); // THIS IS NOT THE CORRECT OUTPUT PATH!
+
+                //File.SetLastWriteTime(outputImagePath, File.GetLastWriteTime(imagePath));
+                //File.SetCreationTime(outputImagePath, File.GetCreationTime(imagePath));
+                //File.SetLastAccessTime(outputImagePath, File.GetLastAccessTime(imagePath));
+
+                ConversionProgress = (double)count++ / imagePaths.Length;
+            });
+        }).ConfigureAwait(false);
+
+        ConversionProgress = 100;
+
+        StatusMessageConvert = LocalizationResource.quick_convert;
         EnableFilesScanButton = true;
     }
 
@@ -92,7 +135,8 @@ public partial class ImageViewModel : ObservableObject
         // reset values
         EnableQuickConvertButton = false;
         List<ImageModel> files = new();
-        StatusMessageScan = "Loading...";
+        StatusMessageScan = LocalizationResource.loading;
+        StatusMessageConvert = LocalizationResource.quick_convert;
 
         string[] filePaths = Directory.GetFiles(settings.SourcePath, "*.*", SearchOption.AllDirectories);
 
@@ -109,24 +153,42 @@ public partial class ImageViewModel : ObservableObject
         // Update the UI on the main (UI) thread
         Debug.WriteLine($"Files counted: {files.Count}, path count: {filePaths.Length}");
         Images = files.ToArray();
-        StatusMessageScan = $"{files.Count} files detected";
-        StatusMessageConvert = "Quick Convert";
+        StatusMessageScan = $"{files.Count} files detected"; //TODO
+        statusMessageConvert = LocalizationResource.quick_convert;
         EnableQuickConvertButton = true;
     }
 
     [RelayCommand]
-    async void OnActionSheetFileLocation()
+    async void GetFileLocation()
     {
-        string result = await Application.Current.MainPage.DisplayPromptAsync("File Location", "VRC Pictures (Documents folder)", initialValue: settings.SourcePath, keyboard: Keyboard.Text);
+        string result = await Application.Current.MainPage.DisplayPromptAsync(LocalizationResource.file_location, "VRC Pictures (Documents folder)", cancel: LocalizationResource.cancel, accept: LocalizationResource.ok, initialValue: settings.SourcePath, keyboard: Keyboard.Text); //TODO
 
-        if (result == null)
-            Debug.WriteLine("Cancel");
-        else if (string.IsNullOrWhiteSpace(result))
-            Debug.WriteLine("OK, without input");
-        else
+        if (result != null && !string.IsNullOrWhiteSpace(result))
         {
             settings.SourcePath = result;
             settings.SaveData();
+        }
+
+    }
+
+    [RelayCommand]
+    async void ChangeOutputType()
+    {
+        const string webp = "WebP";
+        const string heif = "HEIF";
+
+        string result = await Application.Current.MainPage.DisplayActionSheet("Output file type:", LocalizationResource.cancel, null, webp, heif); //TODO
+
+        switch(result)
+        {
+            case webp:
+                settings.OutputType = OutputTypes.webp;
+                settings.SaveData();
+                break;
+            case heif:
+                settings.OutputType = OutputTypes.heif;
+                settings.SaveData();
+                break;
         }
     }
 }

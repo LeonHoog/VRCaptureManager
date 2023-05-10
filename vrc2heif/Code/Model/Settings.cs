@@ -5,6 +5,7 @@ namespace vrc2heif;
 public class Settings
 {
     public string SourcePath { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "VRChat");
+    public OutputTypes OutputType { get; set; }
     public int BreakingVersion { get; set; }
     public bool AutoConvert { get; set; }
     public bool AutoDelete { get; set; }
@@ -15,6 +16,7 @@ public class Settings
     public Settings()
     {
         SourcePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "VRChat");
+        OutputType = OutputTypes.webp;
         BreakingVersion = 0;
         AutoConvert = false;
         AutoDelete = false;
@@ -45,6 +47,12 @@ public class Settings
         }
         return null;
     }
+}
+
+public enum OutputTypes
+{
+    webp,
+    heif
 }
 
 public class FunStats
