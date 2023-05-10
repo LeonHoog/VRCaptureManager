@@ -58,21 +58,21 @@
 
 	<ItemGroup>
 	  <AndroidResource Remove="NewFolder\**" />
+	  <AndroidResource Remove="Resources\ConvertTo-Heic\**" />
 	  <Compile Remove="NewFolder\**" />
+	  <Compile Remove="Resources\ConvertTo-Heic\**" />
 	  <EmbeddedResource Remove="NewFolder\**" />
+	  <EmbeddedResource Remove="Resources\ConvertTo-Heic\**" />
 	  <MauiCss Remove="NewFolder\**" />
+	  <MauiCss Remove="Resources\ConvertTo-Heic\**" />
 	  <MauiXaml Remove="NewFolder\**" />
+	  <MauiXaml Remove="Resources\ConvertTo-Heic\**" />
 	  <None Remove="NewFolder\**" />
+	  <None Remove="Resources\ConvertTo-Heic\**" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Compile Remove="MainViewModel.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Include="Resources\ConvertTo-Heic\ConvertTo-Heic.ps1">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>
