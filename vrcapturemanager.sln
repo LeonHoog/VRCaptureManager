@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vrc2heif", "vrc2heif\vrc2heif.csproj", "{327094AD-86C1-4B2C-ACBE-BEB98D2F139B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vrcapturemanager", "vrc2heif\vrcapturemanager.csproj", "{327094AD-86C1-4B2C-ACBE-BEB98D2F139B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

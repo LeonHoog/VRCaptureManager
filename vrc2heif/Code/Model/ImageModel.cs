@@ -1,4 +1,4 @@
-﻿namespace vrc2heif.Model;
+﻿namespace vrcapturemanager.Model;
 
 public class ImageModel
 {

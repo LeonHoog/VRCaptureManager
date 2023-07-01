@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using vrc2heif.View;
-using vrc2heif.ViewModel;
+using vrcapturemanager.View;
+using vrcapturemanager.ViewModel;
 
-namespace vrc2heif;
+namespace vrcapturemanager;
 
 public static class MauiProgram
 {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace vrc2heif;
+namespace vrcapturemanager;
 
 public class Settings
 {

@@ -7,16 +7,16 @@
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
 		<OutputType>Exe</OutputType>
-		<RootNamespace>vrc2heif</RootNamespace>
+		<RootNamespace>vrcapturemanager</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
-		<ApplicationTitle>VRC2HEIF</ApplicationTitle>
+		<ApplicationTitle>VRCM</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.leonhoog.vrc2heif</ApplicationId>
+		<ApplicationId>com.leonhoog.vrcapturemanager</ApplicationId>
 		<ApplicationIdGuid>afdc7d53-32b5-4b48-a16c-e22af82a52cc</ApplicationIdGuid>
 
 		<!-- Versions -->

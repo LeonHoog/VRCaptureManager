@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace vrc2heif;
+namespace vrcapturemanager;
 
 [Application]
 public class MainApplication : MauiApplication

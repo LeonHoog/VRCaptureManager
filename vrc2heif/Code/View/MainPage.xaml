@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:model="clr-namespace:vrc2heif.Model"
-             xmlns:viewmodel="clr-namespace:vrc2heif.ViewModel"
-             xmlns:local="clr-namespace:vrc2heif"
-             xmlns:lang="clr-namespace:vrc2heif.Resources.Localizations"
+             xmlns:model="clr-namespace:vrcapturemanager.Model"
+             xmlns:viewmodel="clr-namespace:vrcapturemanager.ViewModel"
+             xmlns:local="clr-namespace:vrcapturemanager"
+             xmlns:lang="clr-namespace:vrcapturemanager.Resources.Localizations"
              x:DataType="viewmodel:ImageViewModel"
-             x:Class="vrc2heif.View.MainPage"
+             x:Class="vrcapturemanager.View.MainPage"
              BackgroundColor="#07242B">
     <ContentPage.MenuBarItems>
         <MenuBarItem Text="{x:Static lang:LocalizationResource.preferences}">

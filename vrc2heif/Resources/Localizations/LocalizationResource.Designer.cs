@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace vrc2heif.Resources.Localizations {
+namespace vrcapturemanager.Resources.Localizations {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace vrc2heif.Resources.Localizations {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("vrc2heif.Resources.Localizations.LocalizationResource", typeof(LocalizationResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("vrcapturemanager.Resources.Localizations.LocalizationResource", typeof(LocalizationResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -1,5 +1,5 @@
-﻿using vrc2heif.ViewModel;
-namespace vrc2heif.View;
+﻿using vrcapturemanager.ViewModel;
+namespace vrcapturemanager.View;
 
 public partial class MainPage : ContentPage
 {

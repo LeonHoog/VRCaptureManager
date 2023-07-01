@@ -1,4 +1,4 @@
-﻿namespace vrc2heif;
+﻿namespace vrcapturemanager;
 
 public partial class AppShell : Shell
 {

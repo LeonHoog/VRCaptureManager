@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace vrc2heif;
+namespace vrcapturemanager;
 
 public class Program
 {

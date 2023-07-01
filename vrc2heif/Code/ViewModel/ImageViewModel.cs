@@ -2,11 +2,11 @@
 using CommunityToolkit.Mvvm.Input;
 using SixLabors.ImageSharp.Formats.Webp;
 using System.Diagnostics;
-using vrc2heif.Model;
-using vrc2heif.Resources.Localizations; 
+using vrcapturemanager.Model;
+using vrcapturemanager.Resources.Localizations; 
 using Image = SixLabors.ImageSharp.Image;
 
-namespace vrc2heif.ViewModel;
+namespace vrcapturemanager.ViewModel;
 
 public partial class ImageViewModel : ObservableObject
 {
