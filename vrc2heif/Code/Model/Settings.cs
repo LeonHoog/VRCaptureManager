@@ -52,7 +52,6 @@ public class Settings
 public enum OutputTypes
 {
     webp,
-    heif
 }
 
 public class FunStats

@@ -16,9 +16,6 @@
                 </MenuFlyoutItem.IconImageSource>
                 <MenuFlyoutItem Text="{x:Static lang:LocalizationResource.output_type}"
                                 Command="{Binding ChangeOutputTypeCommand}">
-                    <MenuFlyoutItem.IconImageSource>
-                        <FontImageSource Glyph="&#x267b;"/>
-                    </MenuFlyoutItem.IconImageSource>
                 </MenuFlyoutItem>
             </MenuFlyoutSubItem>
             <MenuFlyoutItem Text="{x:Static lang:LocalizationResource.file_location}"

@@ -60,11 +60,6 @@ public partial class ImageViewModel : ObservableObject
                     imageConversionWebp(imagePaths);
                     break;
                 }
-            case OutputTypes.heif:
-                {
-                    imageConversionHeif(imagePaths);
-                    break;
-                }
         }
     }
 
@@ -97,35 +92,6 @@ public partial class ImageViewModel : ObservableObject
         ConversionProgress = 100;
 
         StatusMessageConvert = LocalizationResource.done; //TODO
-        EnableFilesScanButton = true;
-    }
-
-    private async void imageConversionHeif(string[] imagePaths)
-    {
-        return; // DEZE FUNCTIE IS NOG NIET GESCHREVEN!
-        EnableQuickConvertButton = false;
-        EnableFilesScanButton = false;
-        ConversionProgress = 0;
-        StatusMessageConvert = "Converting..."; //TODO
-        int count = 0;
-
-        await Task.Run(() =>
-        {
-            Parallel.ForEach(imagePaths, async (imagePath) =>
-            {
-                string outputImagePath = Path.ChangeExtension(imagePath, "webp"); // THIS IS NOT THE CORRECT OUTPUT PATH!
-
-                //File.SetLastWriteTime(outputImagePath, File.GetLastWriteTime(imagePath));
-                //File.SetCreationTime(outputImagePath, File.GetCreationTime(imagePath));
-                //File.SetLastAccessTime(outputImagePath, File.GetLastAccessTime(imagePath));
-
-                ConversionProgress = (double)count++ / imagePaths.Length;
-            });
-        }).ConfigureAwait(false);
-
-        ConversionProgress = 100;
-
-        StatusMessageConvert = LocalizationResource.quick_convert;
         EnableFilesScanButton = true;
     }
 
@@ -175,18 +141,13 @@ public partial class ImageViewModel : ObservableObject
     async void ChangeOutputType()
     {
         const string webp = "WebP";
-        const string heif = "HEIF";
 
-        string result = await Application.Current.MainPage.DisplayActionSheet("Output file type:", LocalizationResource.cancel, null, webp, heif); //TODO
+        string result = await Application.Current.MainPage.DisplayActionSheet("Output file type:", LocalizationResource.cancel, null, webp); //TODO
 
         switch(result)
         {
             case webp:
                 settings.OutputType = OutputTypes.webp;
-                settings.SaveData();
-                break;
-            case heif:
-                settings.OutputType = OutputTypes.heif;
                 settings.SaveData();
                 break;
         }
