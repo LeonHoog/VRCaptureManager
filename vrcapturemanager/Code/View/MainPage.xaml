@@ -17,6 +17,9 @@
                 <MenuFlyoutItem Text="{x:Static lang:LocalizationResource.output_type}"
                                 Command="{Binding ChangeOutputTypeCommand}">
                 </MenuFlyoutItem>
+                <MenuFlyoutItem Text="{x:Static lang:LocalizationResource.remove_source}"
+                                Command="{Binding ChangeOutputTypeCommand}">
+                </MenuFlyoutItem>
             </MenuFlyoutSubItem>
             <MenuFlyoutItem Text="{x:Static lang:LocalizationResource.file_location}"
                         Command="{Binding GetFileLocationCommand}">
@@ -25,7 +28,6 @@
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
         </MenuBarItem>
-        <!--<MenuBarItem Text="About"></MenuBarItem>-->
     </ContentPage.MenuBarItems>
 
     <ScrollView BackgroundColor="{DynamicResource Background}">
@@ -36,8 +38,8 @@
 
             <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="160"/>
-                    <ColumnDefinition Width="125"/>
+                    <ColumnDefinition Width="190"/>
+                    <ColumnDefinition Width="155"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button
@@ -47,7 +49,7 @@
                     SemanticProperties.Hint="Scans for pictures"
                     Command="{Binding ScanForFilesCommand}"
                     HorizontalOptions="Center"
-                    WidthRequest="160"
+                    WidthRequest="190"
                     IsEnabled="{Binding EnableFilesScanButton}"/>
                 <Button
                     Grid.Column="1"
