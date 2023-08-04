@@ -79,7 +79,7 @@ public partial class ImageViewModel : ObservableObject
 
                 using Image image = Image.Load(imagePath);
 
-                image.Save(outputImagePath, new WebpEncoder() { Quality = 100, NearLossless = true});
+                image.Save(outputImagePath, new WebpEncoder() { Quality = 100, NearLossless = true });
                 
                 File.SetLastWriteTime(outputImagePath, File.GetLastWriteTime(imagePath));
                 File.SetCreationTime(outputImagePath, File.GetCreationTime(imagePath));
@@ -104,7 +104,16 @@ public partial class ImageViewModel : ObservableObject
         StatusMessageScan = LocalizationResource.loading;
         StatusMessageConvert = LocalizationResource.quick_convert;
 
-        string[] filePaths = Directory.GetFiles(settings.SourcePath, "*.*", SearchOption.AllDirectories);
+        string[] filePaths;
+
+        try
+        {
+            filePaths = Directory.GetFiles(settings.SourcePath, "*.*", SearchOption.AllDirectories);
+        }
+        catch {
+            Application.Current.MainPage.DisplayAlert(LocalizationResource.something_went_wrong, LocalizationResource.directory_not_found, LocalizationResource.ok);
+            filePaths = Array.Empty<string>();
+        }
 
         foreach (string file in filePaths)
         {

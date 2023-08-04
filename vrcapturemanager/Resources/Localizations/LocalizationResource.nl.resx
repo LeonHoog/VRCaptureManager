@@ -125,6 +125,10 @@
     <value>Annuleren</value>
     <comment>button</comment>
   </data>
+  <data name="directory_not_found" xml:space="preserve">
+    <value>Map Niet Gevonden</value>
+    <comment>message</comment>
+  </data>
   <data name="done" xml:space="preserve">
     <value>Klaar!</value>
     <comment>button</comment>
@@ -165,8 +169,16 @@
     <value>Snel Converteren</value>
     <comment>button</comment>
   </data>
+  <data name="remove_source" xml:space="preserve">
+    <value>Bronbestanden Verwijderen</value>
+    <comment>menu item</comment>
+  </data>
   <data name="search_items" xml:space="preserve">
     <value>Afbeeldingen Zoeken</value>
     <comment>button</comment>
+  </data>
+  <data name="something_went_wrong" xml:space="preserve">
+    <value>Er Is Iets Verkeerd Gegaan</value>
+    <comment>header</comment>
   </data>
 </root>

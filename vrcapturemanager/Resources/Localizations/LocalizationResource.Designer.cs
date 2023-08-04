@@ -79,6 +79,15 @@ namespace vrcapturemanager.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Directory Not Found.
+        /// </summary>
+        internal static string directory_not_found {
+            get {
+                return ResourceManager.GetString("directory_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Done!.
         /// </summary>
         internal static string done {
@@ -169,11 +178,29 @@ namespace vrcapturemanager.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove Source Files.
+        /// </summary>
+        internal static string remove_source {
+            get {
+                return ResourceManager.GetString("remove_source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search for Pictures.
         /// </summary>
         internal static string search_items {
             get {
                 return ResourceManager.GetString("search_items", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something Went Wrong.
+        /// </summary>
+        internal static string something_went_wrong {
+            get {
+                return ResourceManager.GetString("something_went_wrong", resourceCulture);
             }
         }
     }
